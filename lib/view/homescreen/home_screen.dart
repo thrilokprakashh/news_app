@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/controller/data.dart';
+import 'package:news_app/controller/news.dart';
 import 'package:news_app/controller/slider_data.dart';
+import 'package:news_app/models/article_model.dart';
 import 'package:news_app/models/category_model.dart';
 import 'package:news_app/models/slider_model.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -16,6 +18,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<CategoryModel> categorie = [];
   List<SliderModel> sliders = [];
+  List<ArticleModel> articles = [];
+  bool _loading = true;
   int activeIndex = 0;
 
   @override
@@ -23,6 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
     categorie = getCategories();
     sliders = getSliders();
     super.initState();
+  }
+
+  getNews() async {
+    News newsClass = News();
+    await newsClass.getNews();
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
