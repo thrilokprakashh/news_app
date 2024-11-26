@@ -8,6 +8,7 @@ import 'package:news_app/models/article_model.dart';
 import 'package:news_app/models/category_model.dart';
 import 'package:news_app/models/slider_model.dart';
 import 'package:news_app/view/%20categorynews/category_news.dart';
+import 'package:news_app/view/allnews/all_news.dart';
 import 'package:news_app/view/articleview/article_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -103,12 +104,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18),
                           ),
-                          Text(
-                            "View All",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AllNews(news: "Breaking"),
+                                  ));
+                            },
+                            child: Text(
+                              "View All",
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16),
+                            ),
                           ),
                         ],
                       ),
@@ -158,12 +169,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18),
                           ),
-                          Text(
-                            "View All",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AllNews(news: "Trending "),
+                                  ));
+                            },
+                            child: Text(
+                              "View All",
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16),
+                            ),
                           ),
                         ],
                       ),
@@ -249,7 +270,11 @@ class categoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => CategoryNews(name: categoryName),));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategoryNews(name: categoryName),
+            ));
       },
       child: Container(
         margin: EdgeInsets.only(right: 16),
