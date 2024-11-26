@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/view/homescreen/home_screen.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -51,23 +52,34 @@ class _LandingPageState extends State<LandingPage> {
             SizedBox(
               height: 40,
             ),
-            Material(
-              elevation: 5,
-              borderRadius: BorderRadius.circular(30),
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.2,
-                padding: EdgeInsets.symmetric(vertical: 15),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Center(
-                  child: Text(
-                    "Get Started",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                  (route) => false,
+                );
+              },
+              child: Material(
+                elevation: 5,
+                borderRadius: BorderRadius.circular(30),
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Get Started",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ),
                 ),
               ),
