@@ -28,24 +28,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    super.initState();
     categorie = getCategories();
     getSlider();
     getNews();
-    super.initState();
   }
 
   getNews() async {
     News newsClass = News();
     await newsClass.getNews();
     setState(() {
+      // Assigning fetched articles
       _loading = false;
     });
+    print("Articles count: ${articles.length}"); // Debugging fetched count
   }
 
   getSlider() async {
     SliderData slider = SliderData();
     await slider.getSlider();
-    sliders = slider.sliders;
+    setState(() {
+      sliders = slider.sliders; // Ensure sliders are populated
+    });
   }
 
   @override
@@ -66,150 +70,104 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0.0,
       ),
       body: _loading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+          ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      height: 70,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categorie.length,
-                        itemBuilder: (context, index) {
-                          return categoryTile(
-                            image: categorie[index].image,
-                            categoryName: categorie[index].categoryName,
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Breaking News!",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        AllNews(news: "Breaking"),
-                                  ));
-                            },
-                            child: Text(
-                              "View All",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    CarouselSlider.builder(
-                      itemCount: 5,
-                      itemBuilder: (context, index, realIndex) {
-                        String? res = sliders[index].urlToImage;
-
-                        String? res1 = sliders[index].title;
-                        return buildImage(res!, index, res1!);
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Categories Section
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    height: 70,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: categorie.length,
+                      itemBuilder: (context, index) {
+                        return categoryTile(
+                          image: categorie[index].image,
+                          categoryName: categorie[index].categoryName,
+                        );
                       },
-                      options: CarouselOptions(
-                        height: 250,
-                        enlargeCenterPage: true,
-                        enlargeStrategy: CenterPageEnlargeStrategy.height,
-                        autoPlay: true,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            activeIndex = index;
-                          });
-                        },
+                    ),
+                  ),
+                  SizedBox(height: 30),
+
+                  // Breaking News Section
+                  sectionHeader(
+                    title: "Breaking News!",
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AllNews(news: "Breaking"),
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
+                  ),
+                  SizedBox(height: 20),
+
+                  // Slider Section
+                  CarouselSlider.builder(
+                    itemCount: sliders.length,
+                    itemBuilder: (context, index, realIndex) {
+                      String? imageUrl = sliders[index].urlToImage;
+                      String? title = sliders[index].title;
+                      return buildImage(
+                          imageUrl ?? "", index, title ?? "No Title");
+                    },
+                    options: CarouselOptions(
+                      height: 250,
+                      enlargeCenterPage: true,
+                      enlargeStrategy: CenterPageEnlargeStrategy.height,
+                      autoPlay: true,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          activeIndex = index;
+                        });
+                      },
                     ),
-                    Center(
-                      child: buildIndicator(),
+                  ),
+                  SizedBox(height: 30),
+                  Center(child: buildIndicator()),
+
+                  // Trending News Section
+                  sectionHeader(
+                    title: "Trending News!",
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AllNews(news: "Trending"),
+                      ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //trending
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Trending News!",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        AllNews(news: "Trending "),
-                                  ));
-                            },
+                  ),
+                  SizedBox(height: 10),
+
+                  // Trending News List
+                  articles.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
                             child: Text(
-                              "View All",
+                              "No trending news available!",
                               style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16),
+                                  fontSize: 16, color: Colors.black54),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-
-                    //trending news cards
-                    Container(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        itemCount: articles.length,
-                        itemBuilder: (context, index) {
-                          return BlogTile(
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: articles.length,
+                          itemBuilder: (context, index) {
+                            return BlogTile(
                               url: articles[index].url!,
-                              desc: articles[index].description!,
-                              imageUrl: articles[index].urlToImage!,
-                              title: articles[index].title!);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                              desc: articles[index].description ??
+                                  "No Description",
+                              imageUrl: articles[index].urlToImage ?? "",
+                              title: articles[index].title ?? "No Title",
+                            );
+                          },
+                        ),
+                ],
               ),
             ),
     );
@@ -225,7 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 250,
                 fit: BoxFit.cover,
                 width: MediaQuery.of(context).size.width,
-                imageUrl: image,
+                imageUrl: image.isNotEmpty
+                    ? image
+                    : "https://via.placeholder.com/300",
               ),
             ),
             Container(
@@ -259,6 +219,32 @@ class _HomeScreenState extends State<HomeScreen> {
         effect: SlideEffect(
             dotHeight: 15, dotWidth: 15, activeDotColor: Colors.blue),
       );
+
+  Widget sectionHeader({required String title, required VoidCallback onTap}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          GestureDetector(
+            onTap: onTap,
+            child: Text(
+              "View All",
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class categoryTile extends StatelessWidget {
@@ -305,7 +291,7 @@ class categoryTile extends StatelessWidget {
                       fontSize: 15),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -347,44 +333,36 @@ class BlogTile extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        height: 150,
+                        imageUrl: imageUrl.isNotEmpty
+                            ? imageUrl
+                            : "https://via.placeholder.com/300",
+                        height: 100,
                         width: 150,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width / 1.8,
-                        child: Text(
+                  SizedBox(width: 10),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 2.2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
                           title,
-                          maxLines: 2,
                           style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17),
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
                         ),
-                      ),
-                      SizedBox(
-                        height: 7,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 1.8,
-                        child: Text(
+                        SizedBox(height: 5),
+                        Text(
                           desc,
-                          maxLines: 3,
-                          style: TextStyle(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 17),
+                          maxLines: 2,
+                          style: TextStyle(fontSize: 12, color: Colors.black54),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
