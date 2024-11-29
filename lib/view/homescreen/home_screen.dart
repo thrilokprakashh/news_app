@@ -38,17 +38,15 @@ class _HomeScreenState extends State<HomeScreen> {
     News newsClass = News();
     await newsClass.getNews();
     setState(() {
-      // Assigning fetched articles
       _loading = false;
     });
-    print("Articles count: ${articles.length}"); // Debugging fetched count
   }
 
   getSlider() async {
     SliderData slider = SliderData();
     await slider.getSlider();
     setState(() {
-      sliders = slider.sliders; // Ensure sliders are populated
+      sliders = slider.sliders;
     });
   }
 
@@ -147,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 20),
                             child: Text(
-                              "No trending news available!",
+                              "No trending news available now",
                               style: TextStyle(
                                   fontSize: 16, color: Colors.black54),
                             ),
