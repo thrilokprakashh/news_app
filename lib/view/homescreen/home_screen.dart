@@ -126,10 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
                   Center(child: buildIndicator()),
                   const SizedBox(
-                    height: 15,
+                    height: 20,
                   ),
 
                   // Trending News Section
