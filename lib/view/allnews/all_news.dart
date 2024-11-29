@@ -5,6 +5,7 @@ import 'package:news_app/controller/slider_data.dart';
 import 'package:news_app/models/article_model.dart';
 import 'package:news_app/models/slider_model.dart';
 import 'package:news_app/view/articleview/article_view.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AllNews extends StatefulWidget {
   String news;
@@ -17,7 +18,7 @@ class AllNews extends StatefulWidget {
 class _AllNewsState extends State<AllNews> {
   List<SliderModel> sliders = [];
   List<ArticleModel> articles = [];
-
+  bool _loading = true;
   void initState() {
     getSlider();
     getNews();
@@ -30,6 +31,7 @@ class _AllNewsState extends State<AllNews> {
     await newsClass.getNews();
     setState(() {
       articles = newsClass.news;
+      _loading = false;
     });
   }
 
@@ -50,31 +52,71 @@ class _AllNewsState extends State<AllNews> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemCount:
-              widget.news == "Breaking" ? sliders.length : articles.length,
-          itemBuilder: (context, index) {
-            return AllNewsSection(
-              image: widget.news == "Breaking"
-                  ? sliders[index].urlToImage!
-                  : articles[index].urlToImage!,
-              desc: widget.news == "Breaking"
-                  ? sliders[index].description!
-                  : articles[index].description!,
-              title: widget.news == "Breaking"
-                  ? sliders[index].title!
-                  : articles[index].title!,
-              url: widget.news == "Breaking"
-                  ? sliders[index].url!
-                  : articles[index].url!,
-            );
-          },
-        ),
-      ),
+      body: _loading
+          ? _buildShimmerEffect()
+          : Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                itemCount: widget.news == "Breaking"
+                    ? sliders.length
+                    : articles.length,
+                itemBuilder: (context, index) {
+                  return AllNewsSection(
+                    image: widget.news == "Breaking"
+                        ? sliders[index].urlToImage!
+                        : articles[index].urlToImage!,
+                    desc: widget.news == "Breaking"
+                        ? sliders[index].description!
+                        : articles[index].description!,
+                    title: widget.news == "Breaking"
+                        ? sliders[index].title!
+                        : articles[index].title!,
+                    url: widget.news == "Breaking"
+                        ? sliders[index].url!
+                        : articles[index].url!,
+                  );
+                },
+              ),
+            ),
+    );
+  }
+
+  Widget _buildShimmerEffect() {
+    return ListView.builder(
+      itemCount: 5, // Number of shimmer items
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Column(
+              children: [
+                Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 5),
+                Container(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 5),
+                Container(
+                  height: 15,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

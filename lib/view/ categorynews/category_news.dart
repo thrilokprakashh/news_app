@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/controller/show_category_news.dart';
 import 'package:news_app/models/show_category_model.dart';
 import 'package:news_app/view/articleview/article_view.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CategoryNews extends StatefulWidget {
   String name;
@@ -42,22 +43,61 @@ class _CategoryNewsState extends State<CategoryNews> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: ClampingScrollPhysics(),
-          itemCount: categories.length,
-          itemBuilder: (context, index) {
-            return ShowCategory(
-              image: categories[index].urlToImage!,
-              desc: categories[index].description!,
-              title: categories[index].title!,
-              url: categories[index].url!,
-            );
-          },
-        ),
-      ),
+      body: _Loading
+          ? _buildShimmerEffect()
+          : Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  return ShowCategory(
+                    image: categories[index].urlToImage!,
+                    desc: categories[index].description!,
+                    title: categories[index].title!,
+                    url: categories[index].url!,
+                  );
+                },
+              ),
+            ),
+    );
+  }
+
+  Widget _buildShimmerEffect() {
+    return ListView.builder(
+      itemCount: 5, // Number of shimmer items
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Column(
+              children: [
+                Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 5),
+                Container(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 5),
+                Container(
+                  height: 15,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

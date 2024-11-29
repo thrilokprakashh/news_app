@@ -10,6 +10,7 @@ import 'package:news_app/models/slider_model.dart';
 import 'package:news_app/view/%20categorynews/category_news.dart';
 import 'package:news_app/view/allnews/all_news.dart';
 import 'package:news_app/view/articleview/article_view.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -69,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0.0,
       ),
       body: _loading
-          ? Center(child: CircularProgressIndicator())
+          ? _buildShimmerEffect()
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,6 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(height: 30),
                   Center(child: buildIndicator()),
+                  const SizedBox(
+                    height: 15,
+                  ),
 
                   // Trending News Section
                   sectionHeader(
@@ -138,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 20),
 
                   // Trending News List
                   articles.isEmpty
@@ -184,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: MediaQuery.of(context).size.width,
                 imageUrl: image.isNotEmpty
                     ? image
-                    : "https://via.placeholder.com/300",
+                    : "assets/pexels-markusspiske-102155.jpg",
               ),
             ),
             Container(
@@ -242,6 +246,43 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildShimmerEffect() {
+    return ListView.builder(
+      itemCount: 5, // Number of shimmer items
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Column(
+              children: [
+                Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 5),
+                Container(
+                  height: 20,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 5),
+                Container(
+                  height: 15,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -334,7 +375,7 @@ class BlogTile extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: imageUrl.isNotEmpty
                             ? imageUrl
-                            : "https://via.placeholder.com/300",
+                            : "assets/pexels-markusspiske-102155.jpg",
                         height: 100,
                         width: 150,
                         fit: BoxFit.cover,
