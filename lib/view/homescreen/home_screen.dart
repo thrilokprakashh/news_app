@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     News newsClass = News();
     await newsClass.getNews();
     setState(() {
+      articles = newsClass.news;
       _loading = false;
     });
   }

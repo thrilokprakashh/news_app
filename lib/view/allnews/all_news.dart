@@ -28,7 +28,9 @@ class _AllNewsState extends State<AllNews> {
   getNews() async {
     News newsClass = News();
     await newsClass.getNews();
-    setState(() {});
+    setState(() {
+      articles = newsClass.news;
+    });
   }
 
   getSlider() async {
