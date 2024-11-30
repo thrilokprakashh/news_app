@@ -145,6 +145,18 @@ class AllNewsSection extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
+                placeholder: (context, url) => Shimmer.fromColors(
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.white,
+                    ),
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!),
+                errorWidget: (context, url, error) => Image.asset(
+                  "assets/pexels-markusspiske-102155.jpg",
+                  fit: BoxFit.cover,
+                ),
                 imageUrl: image,
                 width: MediaQuery.of(context).size.width,
                 height: 200,
@@ -168,7 +180,7 @@ class AllNewsSection extends StatelessWidget {
             ),
             SizedBox(
               height: 20,
-            )
+            ),
           ],
         ),
       ),

@@ -160,15 +160,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: articles.length,
-                          itemBuilder: (context, index) {
-                            return BlogTile(
-                              url: articles[index].url!,
-                              desc: articles[index].description ??
-                                  "No Description",
-                              imageUrl: articles[index].urlToImage ?? "",
-                              title: articles[index].title ?? "No Title",
-                            );
-                          },
+                          itemBuilder: (context, index) =>
+                              articles[index].urlToImage == null
+                                  ? SizedBox(
+                                      child: Icon(Icons.insert_invitation),
+                                    )
+                                  : BlogTile(
+                                      url: articles[index].url!,
+                                      desc: articles[index].description ??
+                                          "No Description",
+                                      imageUrl: articles[index].urlToImage ??
+                                          "no image ",
+                                      title:
+                                          articles[index].title ?? "No Title",
+                                    ),
                         ),
                 ],
               ),
@@ -183,6 +188,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
+                placeholder: (context, url) => Shimmer.fromColors(
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      color: Colors.white,
+                    ),
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!),
+                errorWidget: (context, url, error) => Image.asset(
+                  "assets/pexels-markusspiske-102155.jpg",
+                  fit: BoxFit.cover,
+                ),
                 height: 250,
                 fit: BoxFit.cover,
                 width: MediaQuery.of(context).size.width,
@@ -373,6 +390,18 @@ class BlogTile extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: CachedNetworkImage(
+                        placeholder: (context, url) => Shimmer.fromColors(
+                            child: Container(
+                              height: 100,
+                              width: 100,
+                              color: Colors.white,
+                            ),
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!),
+                        errorWidget: (context, url, error) => Image.asset(
+                          "assets/pexels-markusspiske-102155.jpg",
+                          fit: BoxFit.cover,
+                        ),
                         imageUrl: imageUrl.isNotEmpty
                             ? imageUrl
                             : "assets/pexels-markusspiske-102155.jpg",
