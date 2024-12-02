@@ -111,10 +111,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   CarouselSlider.builder(
                     itemCount: sliders.length,
                     itemBuilder: (context, index, realIndex) {
+                      if (sliders.isEmpty) {
+                        return buildImage(
+                            "assets/pexels-markusspiske-102155.jpg",
+                            index,
+                            "No data available");
+                      }
                       String? imageUrl = sliders[index].urlToImage;
                       String? title = sliders[index].title;
                       return buildImage(
-                          imageUrl ?? "", index, title ?? "No Title");
+                          imageUrl ?? "assets/pexels-markusspiske-102155.jpg",
+                          index,
+                          title ?? "No Title");
                     },
                     options: CarouselOptions(
                       height: 250,
