@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:news_app/utils/animationConstents.dart';
 import 'dart:async';
 
-import 'package:news_app/view/homescreen/home_screen.dart';
 import 'package:news_app/view/landingscreen/landing_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Scale animation
     _scaleController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
     _scaleController.forward();
 
     // Navigate to main screen after splash
-    Timer(const Duration(seconds: 4), () {
+    Timer(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(_createRoute());
     });
   }
@@ -103,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.newspaper, size: 120, color: Colors.white),
+                  Lottie.asset(Animationconstents.spashAnimation),
                   const SizedBox(height: 20),
                   Text(
                     "Flutter News",

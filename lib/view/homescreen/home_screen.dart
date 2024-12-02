@@ -10,6 +10,7 @@ import 'package:news_app/models/slider_model.dart';
 import 'package:news_app/view/%20categorynews/category_news.dart';
 import 'package:news_app/view/allnews/all_news.dart';
 import 'package:news_app/view/articleview/article_view.dart';
+import 'package:news_app/view/my_Drawer.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -69,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         elevation: 0.0,
       ),
+      drawer: MyDrawer(),
       body: _loading
           ? _buildShimmerEffect()
           : SingleChildScrollView(
