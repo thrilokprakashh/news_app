@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:news_app/controller/all_category_news.dart';
 
 import 'package:news_app/models/article_model.dart';
+import 'package:news_app/view/articleview/article_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NewsSearchScreen extends StatefulWidget {
@@ -179,9 +180,11 @@ class _NewsSearchScreenState extends State<NewsSearchScreen> {
   }
 
   void _launchUrl(String? url) {
-    if (url != null) {
-      // Add logic to open URL in browser
-      print("Opening URL: $url");
-    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ArticleView(blogUrl: url.toString()),
+      ),
+    );
   }
 }
