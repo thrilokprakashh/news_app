@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/view/my%20drawer_tile.dart';
 import 'package:news_app/view/search_screen.dart';
@@ -57,25 +58,22 @@ class MyDrawer extends StatelessWidget {
           ),
 
           //settings list tile
-          MyDrawerTile(
-            text: "S E T T I N G S",
-            icon: Icons.settings,
-            onTap: () {
-              // Navigator.pop(context);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => ""SettingsPage"()",
-              //   ),
-              // );
-            },
-          ),
+
           const Spacer(),
           //logo out
           MyDrawerTile(
             text: "L O G O U T",
             icon: Icons.logout,
-            onTap: () {},
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text('Logged out successfully!'),
+                ),
+              );
+            },
           ),
           const SizedBox(
             height: 25,

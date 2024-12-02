@@ -3,7 +3,7 @@ import 'package:lottie/lottie.dart';
 import 'package:news_app/utils/animationConstents.dart';
 import 'dart:async';
 
-import 'package:news_app/view/landingscreen/landing_page.dart';
+import 'package:news_app/view/login_screen/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -60,8 +60,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Route _createRoute() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          const LandingPage(),
+      pageBuilder: (context, animation, secondaryAnimation) => LoginScreen(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0); // Start from the bottom of the screen
         const end = Offset.zero; // End at the original position

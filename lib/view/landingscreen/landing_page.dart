@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/view/homescreen/home_screen.dart';
+
+import 'package:news_app/view/login_screen/login_screen.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -35,7 +36,7 @@ class _LandingPageState extends State<LandingPage>
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(),
+            builder: (context) => LoginScreen(),
           ),
           (route) => false,
         );
