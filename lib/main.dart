@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:news_app/controller/login_screen_controller.dart';
 import 'package:news_app/controller/registration_screen_controller.dart';
 import 'package:news_app/firebase_options.dart';
+import 'package:news_app/view/homescreen/home_screen.dart';
+import 'package:news_app/view/login_screen/login_screen.dart';
 
 import 'package:news_app/view/splashscreen/spashscreen.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +38,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home: HomeScreen(
+          savedArticles: [],
+        ),
       ),
     );
   }

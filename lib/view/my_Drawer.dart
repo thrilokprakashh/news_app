@@ -1,11 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:news_app/view/my%20drawer_tile.dart';
 import 'package:news_app/view/search_screen.dart';
+import 'package:news_app/view/splashscreen/saved_article.dart';
 
-class MyDrawer extends StatelessWidget {
+class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
 
+  @override
+  State<MyDrawer> createState() => _MyDrawerState();
+}
+
+class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -49,15 +56,6 @@ class MyDrawer extends StatelessWidget {
               );
             },
           ),
-          MyDrawerTile(
-            text: "S A V E D",
-            icon: Icons.save,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-
-          //settings list tile
 
           const Spacer(),
           //logo out

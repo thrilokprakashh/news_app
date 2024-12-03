@@ -19,7 +19,9 @@ class LoginScreen extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return HomeScreen();
+          return HomeScreen(
+            savedArticles: [],
+          );
         } else {
           return Scaffold(
             backgroundColor: Colors.blueAccent,

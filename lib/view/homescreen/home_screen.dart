@@ -7,15 +7,18 @@ import 'package:news_app/controller/slider_data.dart';
 import 'package:news_app/models/article_model.dart';
 import 'package:news_app/models/category_model.dart';
 import 'package:news_app/models/slider_model.dart';
+import 'package:news_app/utils/saved_article_storage.dart';
 import 'package:news_app/view/%20categorynews/category_news.dart';
 import 'package:news_app/view/allnews/all_news.dart';
 import 'package:news_app/view/articleview/article_view.dart';
 import 'package:news_app/view/my_Drawer.dart';
+import 'package:news_app/view/splashscreen/saved_article.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final List<ArticleModel> savedArticles;
+  const HomeScreen({super.key, required this.savedArticles});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -25,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   List<CategoryModel> categorie = [];
   List<SliderModel> sliders = [];
   List<ArticleModel> articles = [];
+  List<ArticleModel> savedArticles = [];
+
   bool _loading = true;
   int activeIndex = 0;
 
@@ -34,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     categorie = getCategories();
     getSlider();
     getNews();
+    _loadSavedArticle();
   }
 
   getNews() async {
@@ -53,6 +59,33 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<void> _loadSavedArticle() async {
+    savedArticles = await SavedArticlesStorage.loadArticles();
+    setState(() {});
+  }
+
+  Future<void> _toggleSave(ArticleModel article) async {
+    setState(() {
+      if (savedArticles.contains(article)) {
+        savedArticles.remove(article);
+      } else {
+        savedArticles.add(article);
+      }
+    });
+    await SavedArticlesStorage.saveArticles(savedArticles);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          savedArticles.contains(article)
+              ? 'Article saved!'
+              : 'Article removed from saved!',
+        ),
+        duration:
+            Duration(seconds: 2), // Duration for which the snackbar is visible
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +100,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SavedArticlesScreen(
+                    savedArticles: savedArticles,
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.bookmark),
+          ),
+        ],
         centerTitle: true,
         elevation: 0.0,
       ),
@@ -170,20 +218,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: articles.length,
-                          itemBuilder: (context, index) =>
-                              articles[index].urlToImage == null
-                                  ? SizedBox(
-                                      child: Icon(Icons.insert_invitation),
-                                    )
-                                  : BlogTile(
-                                      url: articles[index].url!,
-                                      desc: articles[index].description ??
-                                          "No Description",
-                                      imageUrl: articles[index].urlToImage ??
-                                          "no image ",
-                                      title:
-                                          articles[index].title ?? "No Title",
-                                    ),
+                          itemBuilder: (context, index) {
+                            final article = articles[index];
+
+                            return BlogTile(
+                              url: articles[index].url!,
+                              desc: articles[index].description ??
+                                  "No Description",
+                              imageUrl:
+                                  articles[index].urlToImage ?? "no image ",
+                              title: articles[index].title ?? "No Title",
+                              isSaved: savedArticles.contains(articles),
+                              onSave: () => _toggleSave(article),
+                            );
+                          },
                         ),
                 ],
               ),
@@ -367,12 +415,16 @@ class categoryTile extends StatelessWidget {
 }
 
 class BlogTile extends StatelessWidget {
-  String imageUrl, title, desc, url;
+  final String imageUrl, title, desc, url;
+  final bool isSaved;
+  final VoidCallback onSave;
   BlogTile(
       {required this.desc,
       required this.imageUrl,
       required this.title,
-      required this.url});
+      required this.url,
+      required this.isSaved,
+      required this.onSave});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -439,6 +491,14 @@ class BlogTile extends StatelessWidget {
                           desc,
                           maxLines: 2,
                           style: TextStyle(fontSize: 12, color: Colors.black54),
+                        ),
+                        SizedBox(height: 5),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            onPressed: onSave,
+                            icon: Icon(Icons.bookmark),
+                          ),
                         ),
                       ],
                     ),
